@@ -19,11 +19,11 @@ if __name__ == "__main__":
     # If no environment values are provided, get it from config file
     jenkins_config = {}
     jenkins_config["server"] = os.getenv('JENKINS_SERVER', config.get('DEFAULT', 'JENKINS_SERVER', fallback=None))
-    jenkins_config["insecure"] = bool(os.getenv('JENKINS_HTTPS_INSECURE', 
+    jenkins_config["insecure"] = bool(os.getenv('JENKINS_HTTPS_INSECURE',
                                                 config.get('DEFAULT', 'JENKINS_HTTPS_INSECURE', fallback=None)))
     jenkins_config["user"] = os.getenv('JENKINS_USERNAME', config.get('DEFAULT', 'JENKINS_USERNAME', fallback=None))
     jenkins_config["passwd"] = os.getenv('JENKINS_PASSWORD', config.get('DEFAULT', 'JENKINS_PASSWORD', fallback=None))
-    
+
     prometheus_port = int(os.getenv('PROM_EXPORTER_PORT', 9118))
 
     collector = JenkinsCollector(**jenkins_config)
@@ -34,5 +34,4 @@ if __name__ == "__main__":
             time.sleep(1)
     except (gaierror, NewConnectionError, MaxRetryError, ConnectionError):
         print(f"Couldn't connect to server {jenkins_config['server']}, please check your configuration.")
-    except:
-        raise
+        exit(128)
