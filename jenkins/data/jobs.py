@@ -11,7 +11,7 @@ MULTIBRANCH = \
     "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject"
 PIPELINE_MULTIBRANCH = \
     "org.jenkinsci.plugins.pipeline.multibranch.defaults" \
-    ".PipelineMultiBranchDefaultsProject"    
+    ".PipelineMultiBranchDefaultsProject"
 FOLDER = "com.cloudbees.hudson.plugins.folder.Folder"
 ORGANIZATION_FOLDER = 'jenkins.branch.OrganizationFolder'
 MAX_GET_BUILDS = 12

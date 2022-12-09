@@ -163,7 +163,7 @@ def standardize_node_info(node, master):
     new_node = {}
 
     new_node['display_name'] = node['displayName']
-    new_node['online'] = not(node['offline'])
+    new_node['online'] = not (node['offline'])
     new_node['total_executors'] = node['numExecutors']
     new_node['master'] = master
 
