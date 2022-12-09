@@ -1,8 +1,14 @@
-FROM python:3.6-slim
+ARG FROM=python:3.11-alpine3.16
+FROM ${FROM}
 
-WORKDIR /root/
+RUN adduser -D -u 1000 user \
+    && mkdir /app \
+    && chown user /app
+WORKDIR /app/
 COPY . .
-RUN pip3.6 install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
-EXPOSE 9118
-ENTRYPOINT [ "/bin/bash",  "entrypoint.sh" ]
+ARG PROM_EXPORTER_PORT=9118
+ENV PROM_EXPORTER_PORT=${PROM_EXPORTER_PORT}
+EXPOSE ${PROM_EXPORTER_PORT}
+ENTRYPOINT [ "/usr/local/bin/python",  "main.py" ]
