@@ -1,14 +1,27 @@
-language: python
-python:      
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.6"
-  - "3.7"
-install:
-  - pip install -r requirements.txt
-  - pip install --no-cache-dir tox
-  - pip install --no-cache-dir pycodestyle
-# command to run tests
-script:
-  - tox -e pycodestyle
+jobs:
+  include:
+    - language: python
+      python: 3.11
+      install:
+        - pip install -r requirements.txt
+        - pip install --no-cache-dir tox
+        - pip install --no-cache-dir pycodestyle
+      # command to run tests
+      script:
+        - tox -e pycodestyle
+    - language: minimal
+      services:
+        - docker    
+      install:
+        - docker build --build-arg "FROM=python:3.6.4-alpine" -t jenkins-exporter:3.6.4 .
+      # command to run tests
+      script:
+        - docker run --rm jenkins-exporter:3.6.4
+    - language: minimal
+      services:
+        - docker    
+      install:
+        - docker build -t jenkins-exporter:latest .
+      # command to run tests
+      script:
+        - docker run -rm jenkins-exporter:latest

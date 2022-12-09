@@ -1,12 +1,12 @@
 # Jenkins Exporter
 
-[![Build Status](https://travis-ci.org/akawork/Jenkins-exporter.svg?branch=master)](https://travis-ci.org/akawork/Jenkins-exporter)
+[![Build Status](https://app.travis-ci.com/BalazsGyarmati/jenkins-exporter.svg?branch=master)](https://app.travis-ci.com/github/BalazsGyarmati/jenkins-exporter)
 
 Jenkins exporter is a exporter to get metrics of Jenkins server, deployed on FSOFT environment.
 
-Jenkins exporter has been written in python3. It's tested in Jenkins version 2.143 and 2.176.1.
+Jenkins exporter has been written in python3. It's been tested with Jenkins versions 2.143, 2.176.1 and 2.332.2.
 
-*Note: We used **timestamp()** in **datetime** library not supported by python2, so make sure running Jenkins exporter in python3 or newer*
+*Note: Supported python versions are 3.6.4->3.11.x, so make sure you are running Jenkins exporter with those versions*
 
 ## Usage:
 
