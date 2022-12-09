@@ -2,21 +2,37 @@ import os
 import sys
 import time
 import configparser
+from socket import gaierror
+from urllib3.exceptions import NewConnectionError
+from urllib3.exceptions import MaxRetryError
+from requests.exceptions import ConnectionError
 
 from prometheus_client import start_http_server
 from prometheus_client.core import REGISTRY
 from jenkins.jenkins import JenkinsCollector
 
 if __name__ == "__main__":
-    # Import configuration file
+    # Import configuration file, if present
     config = configparser.ConfigParser()
-    config.read("config.ini")
-    collector = JenkinsCollector(
-        server=config['DEFAULT']['JENKINS_SERVER'],
-        user=config['DEFAULT']['JENKINS_USERNAME'],
-        passwd=config['DEFAULT']['JENKINS_PASSWORD']
-    )
-    REGISTRY.register(collector)
-    start_http_server(9118)
-    while True:
-        time.sleep(1)
+    config.read(os.getenv('CONFIG_FILE_PATH', "config.ini"))
+
+    # If no environment values are provided, get it from config file
+    jenkins_config = {}
+    jenkins_config["server"] = os.getenv('JENKINS_SERVER', config.get('DEFAULT', 'JENKINS_SERVER', fallback=None))
+    jenkins_config["insecure"] = bool(os.getenv('JENKINS_HTTPS_INSECURE', 
+                                                config.get('DEFAULT', 'JENKINS_HTTPS_INSECURE', fallback=None)))
+    jenkins_config["user"] = os.getenv('JENKINS_USERNAME', config.get('DEFAULT', 'JENKINS_USERNAME', fallback=None))
+    jenkins_config["passwd"] = os.getenv('JENKINS_PASSWORD', config.get('DEFAULT', 'JENKINS_PASSWORD', fallback=None))
+    
+    prometheus_port = int(os.getenv('PROM_EXPORTER_PORT', 9118))
+
+    collector = JenkinsCollector(**jenkins_config)
+    try:
+        REGISTRY.register(collector)
+        start_http_server(prometheus_port)
+        while True:
+            time.sleep(1)
+    except (gaierror, NewConnectionError, MaxRetryError, ConnectionError):
+        print(f"Couldn't connect to server {jenkins_config['server']}, please check your configuration.")
+    except:
+        raise

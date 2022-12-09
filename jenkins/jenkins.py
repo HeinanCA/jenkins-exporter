@@ -13,7 +13,7 @@ class Jenkins(object):
     def __init__(self, server, auth, insecure=True):
         self.server = server
         self.auth = auth
-        self.req = APIConnection(server, auth)
+        self.req = APIConnection(server, auth, insecure)
         self.jobs = Jobs(self)
         self.queue = Queue(self)
         self.nodes = Nodes(self)
@@ -30,7 +30,7 @@ class JenkinsCollector(object):
         jenkins = Jenkins(
             server=self.server,
             auth=self.auth,
-            insecure=True
+            insecure=self.insecure
         )
 
         jenkins_metrics = JenkinsMetrics(jenkins)
