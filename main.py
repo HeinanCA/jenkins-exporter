@@ -24,12 +24,15 @@ if __name__ == "__main__":
     jenkins_config["user"] = os.getenv('JENKINS_USERNAME', config.get('DEFAULT', 'JENKINS_USERNAME', fallback=None))
     jenkins_config["passwd"] = os.getenv('JENKINS_PASSWORD', config.get('DEFAULT', 'JENKINS_PASSWORD', fallback=None))
 
-    prometheus_port = int(os.getenv('PROM_EXPORTER_PORT', 9118))
+    prometheus_config = {}
+    prometheus_config["port"] = int(os.getenv('PROM_EXPORTER_PORT', 9118))
+    prometheus_config["metric_types"] = os.getenv('PROM_METRIC_TYPES', 
+                                                  config.get('DEFAULT', 'PROM_METRIC_TYPES', fallback="all"))
 
-    collector = JenkinsCollector(**jenkins_config)
+    collector = JenkinsCollector(metric_types=prometheus_config["metric_types"], **jenkins_config)
     try:
         REGISTRY.register(collector)
-        start_http_server(prometheus_port)
+        start_http_server(prometheus_config["port"])
         while True:
             time.sleep(1)
     except (gaierror, NewConnectionError, MaxRetryError, ConnectionError):

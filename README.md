@@ -26,6 +26,7 @@ docker run -p 9118:9118 --name jenkins_exporter -d \
 -e "JENKINS_HTTPS_INSECURE=true" \
 -e "JENKINS_USERNAME=example" \
 -e "JENKINS_PASSWORD=123456" \
+-e "PROM_METRIC_TYPES=node,queue" \
 -e "PROM_EXPORTER_PORT=9118" jenkins_exporter
 ```
 
@@ -35,6 +36,7 @@ With:
 - JENKINS_HTTPS_INSECURE: true for self-signed certificates, false for valid ones
 - JENKINS_USERNAME: is the user of Jenkins who have permission to access Jenkins resource
 - JENKINS_PASSWORD: is the password of user
+- PROM_METRIC_TYPES: a comma separated list of metric types you would like to see, e.g. "job,node,queue" or simply "all"
 - PROM_EXPORTER_PORT: the port where the exporter will listen.
 
 ### *Or using config file:*
@@ -47,8 +49,9 @@ docker run -p 9118:9118 --name jenkins_exporter -d \
 with ***config.ini:***
 ```ini
 [DEFAULT]
-JENKINS_SERVER = http://jenkins_server:8080
-JENKINS_HTTPS_INSECURE = true
-JENKINS_USERNAME = username
-JENKINS_PASSWORD = password
+JENKINS_SERVER=http://jenkins_server:8080
+JENKINS_HTTPS_INSECURE=true
+JENKINS_USERNAME=username
+JENKINS_PASSWORD=password
+PROM_METRIC_TYPES=all
 ```

@@ -21,10 +21,11 @@ class Jenkins(object):
 
 class JenkinsCollector(object):
 
-    def __init__(self, server, user, passwd, insecure=False):
+    def __init__(self, server, user, passwd, insecure=False, metric_types="job,node,queue"):
         self.server = server
         self.insecure = insecure
         self.auth = (user, passwd)
+        self.metric_types = metric_types.split(",")
 
     def collect(self):
         jenkins = Jenkins(
@@ -33,7 +34,7 @@ class JenkinsCollector(object):
             insecure=self.insecure
         )
 
-        jenkins_metrics = JenkinsMetrics(jenkins)
+        jenkins_metrics = JenkinsMetrics(jenkins, self.metric_types)
         metrics = jenkins_metrics.make_metrics()
 
         for metric in metrics:
@@ -42,16 +43,20 @@ class JenkinsCollector(object):
 
 class JenkinsMetrics(object):
 
-    def __init__(self, jenkins):
+    def __init__(self, jenkins, metric_types):
         self.jenkins = jenkins
         self.metrics = []
+        self.metric_types= metric_types
 
     def make_metrics(self):
         metrics = []
 
-        metrics += job_metrics.make_metrics(self.jenkins.jobs)
-        metrics += node_metrics.make_metrics(self.jenkins.nodes)
-        metrics += queue_metrics.make_metrics(self.jenkins.queue)
+        if ("job" in self.metric_types or "all" in self.metric_types):
+            metrics += job_metrics.make_metrics(self.jenkins.jobs)
+        if ("node" in self.metric_types or "all" in self.metric_types):
+            metrics += node_metrics.make_metrics(self.jenkins.nodes)
+        if ("queue" in self.metric_types or "all" in self.metric_types):
+            metrics += queue_metrics.make_metrics(self.jenkins.queue)
 
         self.metrics = metrics
 
