@@ -34,4 +34,4 @@ if __name__ == "__main__":
             time.sleep(1)
     except (gaierror, NewConnectionError, MaxRetryError, ConnectionError):
         print(f"Couldn't connect to server {jenkins_config['server']}, please check your configuration.")
-        exit(128)
+        exit(111)

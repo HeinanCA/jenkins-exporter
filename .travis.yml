@@ -1,3 +1,7 @@
+language: shell
+os:
+  - linux
+dist: jammy
 jobs:
   include:
     - language: python
@@ -9,19 +13,51 @@ jobs:
       # command to run tests
       script:
         - tox -e pycodestyle
-    - language: minimal
-      services:
+    - services:
         - docker    
       install:
         - docker build --build-arg "FROM=python:3.6.4-alpine" -t jenkins-exporter:3.6.4 .
       # command to run tests
       script:
-        - docker run --rm jenkins-exporter:3.6.4
-    - language: minimal
-      services:
+        - docker run --rm jenkins-exporter:3.6.4 || TEST_RESULT=$?
+        - if [[ $TEST_RESULT == 111 ]]; then echo "Tests completed successfully"; else echo "Tests failed" && (exit 1); fi
+    - services:
+        - docker    
+      install:
+        - docker build --build-arg "FROM=python:3.7-alpine" -t jenkins-exporter:3.7 .
+      # command to run tests
+      script:
+        - docker run --rm jenkins-exporter:3.7 || TEST_RESULT=$?
+        - if [[ $TEST_RESULT == 111 ]]; then echo "Tests completed successfully"; else echo "Tests failed" && (exit 1); fi
+    - services:
+        - docker    
+      install:
+        - docker build --build-arg "FROM=python:3.8-alpine" -t jenkins-exporter:3.8 .
+      # command to run tests
+      script:
+        - docker run --rm jenkins-exporter:3.8 || TEST_RESULT=$?
+        - if [[ $TEST_RESULT == 111 ]]; then echo "Tests completed successfully"; else echo "Tests failed" && (exit 1); fi
+    - services:
+        - docker    
+      install:
+        - docker build --build-arg "FROM=python:3.9-alpine" -t jenkins-exporter:3.9 .
+      # command to run tests
+      script:
+        - docker run --rm jenkins-exporter:3.9 || TEST_RESULT=$?
+        - if [[ $TEST_RESULT == 111 ]]; then echo "Tests completed successfully"; else echo "Tests failed" && (exit 1); fi
+    - services:
+        - docker    
+      install:
+        - docker build --build-arg "FROM=python:3.10-alpine" -t jenkins-exporter:3.10 .
+      # command to run tests
+      script:
+        - docker run --rm jenkins-exporter:3.10 || TEST_RESULT=$?
+        - if [[ $TEST_RESULT == 111 ]]; then echo "Tests completed successfully"; else echo "Tests failed" && (exit 1); fi
+    - services:
         - docker    
       install:
         - docker build -t jenkins-exporter:latest .
       # command to run tests
       script:
-        - docker run -rm jenkins-exporter:latest
+        - docker run --rm jenkins-exporter:latest || TEST_RESULT=$?
+        - if [[ $TEST_RESULT == 111 ]]; then echo "Tests completed successfully"; else echo "Tests failed" && (exit 1); fi
