@@ -106,3 +106,6 @@ venv.bak/
 # pycache
 jenkins/__pycache__
 config/__pycache__
+jenkins/connection/__pycache__
+jenkins/data/__pycache__
+jenkins/metrics/__pycache__
