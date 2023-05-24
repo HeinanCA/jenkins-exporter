@@ -1,18 +1,18 @@
 # Jenkins Exporter
 
-[![Build Status](https://app.travis-ci.com/BalazsGyarmati/jenkins-exporter.svg?branch=master)](https://app.travis-ci.com/github/BalazsGyarmati/jenkins-exporter)
+[![Docker Image CI](https://github.com/HeinanCA/jenkins-exporter/actions/workflows/docker-image.yml/badge.svg)](https://github.com/HeinanCA/jenkins-exporter/actions/workflows/docker-image.yml)
 
-Jenkins exporter is a exporter to get metrics of Jenkins server, deployed on FSOFT environment.
+Jenkins exporter is an exporter to get metrics of Jenkins server, deployed on FSOFT environment.
 
-Jenkins exporter has been written in python3. It's been tested with Jenkins versions 2.143, 2.176.1 and 2.332.2.
+Jenkins exporter has been written in python3. It's been tested with Jenkins versions 2.143, 2.176.1 and 2.332.2, 2.387.3
 
-*Note: Supported python versions are 3.6.4->3.11.x, so make sure you are running Jenkins exporter with those versions*
+*Note: Supported Python versions are Python 3.11.x, so make sure you are running Jenkins Exporter with those versions*
 
 ## Usage:
 
-You can download source code and build docker yourself, or use docker image we have built.
+You can download the source code and build docker yourself, or use the docker image under the Docker Hub repository: https://hub.docker.com/r/heinanca/jenkins-exporter
 
-### Step 1: Build image
+### Step 1: Build an image
 
 ```sh
 docker build -t jenkins_exporter .
@@ -32,11 +32,11 @@ docker run -p 9118:9118 --name jenkins_exporter -d \
 
 With:
 
-- JENKINS_SERVER: is the url of Jenkins
+- JENKINS_SERVER: is the URL of Jenkins
 - JENKINS_HTTPS_INSECURE: true for self-signed certificates, false for valid ones
-- JENKINS_USERNAME: is the user of Jenkins who have permission to access Jenkins resource
-- JENKINS_PASSWORD: is the password of user
-- PROM_METRIC_TYPES: a comma separated list of metric types you would like to see, e.g. "job,node,queue" or simply "all"
+- JENKINS_USERNAME: is the user of Jenkins who has permission to access Jenkins resource
+- JENKINS_PASSWORD: is the password of the user
+- PROM_METRIC_TYPES: a comma-separated list of metric types you would like to see, e.g. "job, node,queue" or simply "all"
 - PROM_EXPORTER_PORT: the port where the exporter will listen.
 
 ### *Or using config file:*
